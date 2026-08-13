@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+export const dynamic = 'force-dynamic';
+
 import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
 import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
