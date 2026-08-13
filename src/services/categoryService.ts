@@ -31,7 +31,7 @@ export interface SingleCategoryResponse {
   data: Category;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
 /**
  * Fetch a paginated list of categories
@@ -123,3 +123,4 @@ export async function deleteCategory(id: number | string) {
   }
   return response.json();
 }
+

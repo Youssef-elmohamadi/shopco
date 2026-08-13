@@ -39,7 +39,7 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     // Fetch categories for dropdown
@@ -488,3 +488,4 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
     </div>
   );
 }
+

@@ -9,7 +9,7 @@ import { getProfile, User } from "@/services/userService";
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     getProfile()
@@ -190,3 +190,4 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     </div>
   );
 }
+

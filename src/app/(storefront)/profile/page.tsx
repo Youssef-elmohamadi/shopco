@@ -9,7 +9,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     fetchProfile();
@@ -151,3 +151,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

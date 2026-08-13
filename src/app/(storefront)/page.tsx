@@ -156,7 +156,7 @@ export default async function StorefrontHomePage() {
                   <div className="absolute inset-0 bg-white z-0">
                     {category.imageUrl && (
                       <Image 
-                        src={category.imageUrl.startsWith('http') ? category.imageUrl : `${process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7260'}${category.imageUrl}`} 
+                        src={category.imageUrl.startsWith('http') ? category.imageUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://www.shopco.somee.com'}${category.imageUrl}`} 
                         alt={category.name}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -193,3 +193,4 @@ export default async function StorefrontHomePage() {
     </div>
   );
 }
+

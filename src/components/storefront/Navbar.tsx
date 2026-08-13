@@ -145,7 +145,7 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
                 </h4>
                 <div className="flex flex-col gap-2">
                   {searchResults.products.map((prod) => {
-                    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+                    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
                     const firstImage = prod.images?.[0]?.url || "";
                     const imageUrl = firstImage.startsWith('http') ? firstImage : `${API_BASE_URL}${firstImage}`;
 
@@ -293,7 +293,7 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
                   <>
                     <div className="flex flex-col gap-4 max-h-60 overflow-y-auto pr-1">
                       {cartItems.map((item) => {
-                        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+                        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
                         const imageUrl = item.image.startsWith('http') ? item.image : `${API_BASE_URL}${item.image}`;
                         
                         return (
@@ -420,3 +420,4 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
     </div>
   );
 }
+

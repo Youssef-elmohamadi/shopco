@@ -13,7 +13,7 @@ export default function EditProfilePage() {
 
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     getProfile()
@@ -119,3 +119,4 @@ export default function EditProfilePage() {
     </div>
   );
 }
+

@@ -59,7 +59,7 @@ export interface SingleProductResponse {
 }
 
 import { revalidateTag } from "next/cache";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // Helper to get the auth header using the HTTP-Only cookie
@@ -168,3 +168,4 @@ export async function deleteProduct(id: number | string) {
     return { success: response.ok, status: response.status };
   }
 }
+

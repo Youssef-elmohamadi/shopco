@@ -107,7 +107,7 @@ export default function CheckoutPage() {
     }
   };
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   if (cartItems.length === 0) {
     return null;
@@ -396,3 +396,4 @@ export default function CheckoutPage() {
     </div>
   );
 }
+

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { User } from "@/services/userService";
 
 export default function UserMetaCard({ user }: { user?: User | null }) {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   return (
     <>
@@ -60,3 +60,4 @@ export default function UserMetaCard({ user }: { user?: User | null }) {
     </>
   );
 }
+

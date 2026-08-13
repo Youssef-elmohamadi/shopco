@@ -27,7 +27,7 @@ export interface DashboardResponse {
   errors?: Record<string, string[]>;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -53,3 +53,4 @@ export async function fetchDashboardStatistics(): Promise<DashboardResponse> {
   
   return response.json();
 }
+

@@ -10,7 +10,7 @@ export default function WishlistPage() {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     fetchWishlist();
@@ -132,3 +132,4 @@ export default function WishlistPage() {
     </div>
   );
 }
+

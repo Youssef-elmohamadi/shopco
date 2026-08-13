@@ -11,7 +11,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   // Use absolute URL for the image if it exists, otherwise a placeholder
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
   const imageUrl = product.images && product.images.length > 0
     ? (product.images[0].url.startsWith('http') ? product.images[0].url : `${API_BASE_URL}${product.images[0].url}`)
     : "/images/placeholder.png";
@@ -93,3 +93,4 @@ export default function ProductCard({ product }: ProductCardProps) {
     </div>
   );
 }
+

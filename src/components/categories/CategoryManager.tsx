@@ -16,7 +16,7 @@ import { getClientCache, setClientCache, clearClientCache } from "@/utils/client
 
 export default function CategoryManager() {
   const itemsPerPage = 5;
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -358,3 +358,4 @@ export default function CategoryManager() {
     </div>
   );
 }
+

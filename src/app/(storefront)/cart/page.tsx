@@ -44,7 +44,7 @@ export default function CartPage() {
     }
   };
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   return (
     <div className="bg-white dark:bg-gray-950 min-h-screen py-8 sm:py-12">
@@ -272,3 +272,4 @@ export default function CartPage() {
     </div>
   );
 }
+

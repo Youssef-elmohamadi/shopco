@@ -23,11 +23,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "localhost",
+        hostname: "www.shopcc.somee.com",
       },
       {
         protocol: "https",
-        hostname: "localhost",
+        hostname: "www.shopc.somee.com",
       },
     ],
   },

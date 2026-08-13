@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
@@ -77,3 +77,4 @@ export async function checkWishlist(productId: number | string): Promise<boolean
   const result = await response.json();
   return result.isFavorited;
 }
+

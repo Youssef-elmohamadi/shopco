@@ -16,7 +16,7 @@ export interface HomeApiResponse {
   errors: any;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:7260";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export async function fetchHomeData(): Promise<HomeApiResponse> {
@@ -30,3 +30,4 @@ export async function fetchHomeData(): Promise<HomeApiResponse> {
 
   return response.json();
 }
+
