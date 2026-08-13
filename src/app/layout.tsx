@@ -1,6 +1,8 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { CartProvider } from '@/context/CartContext';
