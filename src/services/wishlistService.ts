@@ -8,10 +8,15 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+
+  if (token && token !== "undefined") {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 }
 
 export interface WishlistItem {
@@ -28,18 +33,25 @@ export interface WishlistItem {
 }
 
 export async function getMyWishlist(): Promise<WishlistItem[]> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Wishlist`, { headers, cache: 'no-store' });
-  
-  if (!response.ok) {
-    if (response.status === 401) {
-       return [];
+  try {
+    const headers = await getAuthHeaders();
+    const authHeader = headers as Record<string, string>;
+    if (!authHeader.Authorization) {
+      return [];
     }
-    throw new Error("Failed to fetch wishlist");
+
+    const response = await fetch(`${API_BASE_URL}/api/Wishlist`, { headers, cache: 'no-store' });
+    
+    if (!response.ok) {
+      return [];
+    }
+    
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error in getMyWishlist:", error);
+    return [];
   }
-  
-  const result = await response.json();
-  return result.data || [];
 }
 
 export async function toggleWishlist(productId: number | string): Promise<{ success: boolean; message: string; isFavorited: boolean }> {

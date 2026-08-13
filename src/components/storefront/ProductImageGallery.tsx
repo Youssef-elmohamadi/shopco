@@ -40,6 +40,14 @@ export default function ProductImageGallery({ images, productName }: ProductImag
 
   const activeImage = images[activeImageIndex];
 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+  const getImageUrl = (url?: string) => {
+    if (!url) return "/images/placeholder.png";
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    if (url.startsWith("/")) return `${API_BASE_URL}${url}`;
+    return `${API_BASE_URL}/${url}`;
+  };
+
   return (
     <div className="w-full flex flex-col-reverse md:flex-row gap-4 h-[500px]">
       {/* Thumbnails */}
@@ -51,7 +59,7 @@ export default function ProductImageGallery({ images, productName }: ProductImag
               onClick={() => setActiveImageIndex(idx)}
               className={`relative w-[100px] h-[100px] md:w-full md:aspect-[3/4] md:h-auto rounded-[20px] overflow-hidden bg-[#F0EEED] cursor-pointer border-2 transition-colors ${idx === activeImageIndex ? 'border-black' : 'border-transparent hover:border-gray-300'}`}
             >
-              <Image src={img.url} alt={`${productName} thumbnail`} fill style={{ objectFit: 'cover' }} />
+              <Image src={getImageUrl(img.url)} alt={`${productName} thumbnail`} fill style={{ objectFit: 'cover' }} />
             </div>
           ))}
         </div>
@@ -66,7 +74,7 @@ export default function ProductImageGallery({ images, productName }: ProductImag
         onMouseMove={handleMouseMove}
       >
         <Image
-          src={activeImage.url}
+          src={getImageUrl(activeImage?.url)}
           alt={productName}
           fill
           style={{ 

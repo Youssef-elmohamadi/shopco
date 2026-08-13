@@ -37,33 +37,61 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee
  * Fetch a paginated list of categories
  */
 export async function fetchCategories(page: number = 1, pageSize: number = 5, searchName: string = ""): Promise<PagedCategoryResponse> {
-  const url = new URL(`${API_BASE_URL}/api/Category`);
-  url.searchParams.append("pageNumber", page.toString());
-  url.searchParams.append("pageSize", pageSize.toString());
-  if (searchName) {
-    url.searchParams.append("searchName", searchName);
-  }
+  try {
+    const url = new URL(`${API_BASE_URL}/api/Category`);
+    url.searchParams.append("pageNumber", page.toString());
+    url.searchParams.append("pageSize", pageSize.toString());
+    if (searchName) {
+      url.searchParams.append("searchName", searchName);
+    }
 
-  const response = await fetch(url.toString(), {
-    next: { tags: ["categories"] }
-  });
-  if (!response.ok) {
-    throw new Error("Failed to fetch categories");
+    const response = await fetch(url.toString(), {
+      cache: "no-store",
+      next: { tags: ["categories"] }
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: "Failed to fetch categories",
+        data: { items: [], totalItems: 0, pageNumber: page, pageSize, totalPages: 0 }
+      };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchCategories:", error);
+    return {
+      success: false,
+      message: "Network error fetching categories",
+      data: { items: [], totalItems: 0, pageNumber: page, pageSize, totalPages: 0 }
+    };
   }
-  return response.json();
 }
 
 /**
  * Fetch a single category by ID
  */
 export async function getCategoryById(id: number | string): Promise<SingleCategoryResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/Category/${id}`, {
-    next: { tags: [`category-${id}`, "categories"] }
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch category with ID: ${id}`);
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Category/${id}`, {
+      cache: "no-store",
+      next: { tags: [`category-${id}`, "categories"] }
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `Failed to fetch category with ID: ${id}`,
+        data: null as any
+      };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in getCategoryById:", error);
+    return {
+      success: false,
+      message: `Network error fetching category ${id}`,
+      data: null as any
+    };
   }
-  return response.json();
 }
 
 /**

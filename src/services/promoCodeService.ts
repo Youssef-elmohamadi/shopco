@@ -42,15 +42,19 @@ export interface SinglePromoCodeResponse {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-// Helper to get the auth header using the HTTP-Only cookie
 async function getAuthHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
   const token = cookieStore.get("admin_token")?.value || cookieStore.get("token")?.value;
   
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+
+  if (token && token !== "undefined") {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 }
 
 export async function fetchPromoCodes(): Promise<PromoCodeListResponse> {

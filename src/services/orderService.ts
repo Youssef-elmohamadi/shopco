@@ -58,40 +58,60 @@ async function getAuthHeaders(isAdminApp: boolean = true): Promise<HeadersInit> 
     token = cookieStore.get("admin_token")?.value || token;
   }
   
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+
+  if (token && token !== "undefined") {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 }
 
 export async function fetchAllOrders(): Promise<ArrayOrderResponse> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Order/all`, { headers, cache: 'no-store' });
-  
-  if (!response.ok) {
-    throw new Error("Failed to fetch all orders");
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/Order/all`, { headers, cache: 'no-store' });
+    
+    if (!response.ok) {
+      return { success: false, message: "Failed to fetch all orders", data: [] };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchAllOrders:", error);
+    return { success: false, message: "Network error fetching orders", data: [] };
   }
-  return response.json();
 }
 
 export async function getMyOrders(isAdminApp: boolean = true): Promise<ArrayOrderResponse> {
-  const headers = await getAuthHeaders(isAdminApp);
-  const response = await fetch(`${API_BASE_URL}/api/Order`, { headers, cache: 'no-store' });
-  
-  if (!response.ok) {
-    throw new Error("Failed to fetch my orders");
+  try {
+    const headers = await getAuthHeaders(isAdminApp);
+    const response = await fetch(`${API_BASE_URL}/api/Order`, { headers, cache: 'no-store' });
+    
+    if (!response.ok) {
+      return { success: false, message: "Failed to fetch orders", data: [] };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in getMyOrders:", error);
+    return { success: false, message: "Network error fetching orders", data: [] };
   }
-  return response.json();
 }
 
 export async function getOrderById(id: number | string, isAdminApp: boolean = true): Promise<SingleOrderResponse> {
-  const headers = await getAuthHeaders(isAdminApp);
-  const response = await fetch(`${API_BASE_URL}/api/Order/${id}`, { headers, cache: 'no-store' });
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch order with ID: ${id}`);
+  try {
+    const headers = await getAuthHeaders(isAdminApp);
+    const response = await fetch(`${API_BASE_URL}/api/Order/${id}`, { headers, cache: 'no-store' });
+    
+    if (!response.ok) {
+      return { success: false, message: `Failed to fetch order ${id}`, data: null as any };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in getOrderById:", error);
+    return { success: false, message: `Network error fetching order ${id}`, data: null as any };
   }
-  return response.json();
 }
 
 export async function changeOrderStatus(id: number | string, status: string): Promise<SingleOrderResponse> {

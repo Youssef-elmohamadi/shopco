@@ -34,23 +34,57 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
   const token = cookieStore.get("admin_token")?.value || cookieStore.get("token")?.value;
   
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+
+  if (token && token !== "undefined") {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
+  return headers;
 }
 
 export async function fetchDashboardStatistics(): Promise<DashboardResponse> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Dashboard/statistics`, { 
-    headers, 
-    cache: 'no-store' 
-  });
-  
-  if (!response.ok) {
-    throw new Error("Failed to fetch dashboard statistics");
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/Dashboard/statistics`, { 
+      headers, 
+      cache: 'no-store' 
+    });
+    
+    if (!response.ok) {
+      return {
+        success: false,
+        message: "Failed to fetch dashboard statistics",
+        data: {
+          totalProducts: 0,
+          totalCategories: 0,
+          totalUsers: 0,
+          totalOrders: 0,
+          totalRevenue: 0,
+          monthlyOrders: [],
+          recentOrders: []
+        }
+      };
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchDashboardStatistics:", error);
+    return {
+      success: false,
+      message: "Network error fetching dashboard statistics",
+      data: {
+        totalProducts: 0,
+        totalCategories: 0,
+        totalUsers: 0,
+        totalOrders: 0,
+        totalRevenue: 0,
+        monthlyOrders: [],
+        recentOrders: []
+      }
+    };
   }
-  
-  return response.json();
 }
 

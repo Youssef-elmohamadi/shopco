@@ -37,30 +37,45 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
   const token = cookieStore.get("admin_token")?.value || cookieStore.get("token")?.value;
   
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+
+  if (token && token !== "undefined") {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 }
 
 export async function fetchRoles(): Promise<ArrayRoleResponse> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Role`, { headers, cache: 'no-store' });
-  
-  if (!response.ok) {
-    throw new Error("Failed to fetch roles");
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/Role`, { headers, cache: 'no-store' });
+    
+    if (!response.ok) {
+      return { success: false, message: "Failed to fetch roles", data: [] };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchRoles:", error);
+    return { success: false, message: "Network error fetching roles", data: [] };
   }
-  return response.json();
 }
 
 export async function getRoleById(id: number | string): Promise<SingleRoleResponse> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Role/${id}`, { headers, cache: 'no-store' });
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch role with ID: ${id}`);
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/Role/${id}`, { headers, cache: 'no-store' });
+    
+    if (!response.ok) {
+      return { success: false, message: `Failed to fetch role ${id}`, data: null as any };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in getRoleById:", error);
+    return { success: false, message: `Network error fetching role ${id}`, data: null as any };
   }
-  return response.json();
 }
 
 export async function createRole(data: { name: string; description?: string; permissionIds?: number[] }) {

@@ -59,36 +59,53 @@ async function getAuthHeaders(isAdminApp: boolean = true): Promise<HeadersInit> 
     token = cookieStore.get("admin_token")?.value || token;
   }
   
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
+
+  if (token && token !== "undefined") {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 }
 
 export async function fetchUsers(): Promise<ArrayUserResponse> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User`, { 
-    headers, 
-    next: { tags: ["users"] } 
-  });
-  
-  if (!response.ok) {
-    throw new Error("Failed to fetch users");
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/User`, { 
+      headers, 
+      cache: "no-store",
+      next: { tags: ["users"] } 
+    });
+    
+    if (!response.ok) {
+      return { success: false, message: "Failed to fetch users", data: [] };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchUsers:", error);
+    return { success: false, message: "Network error fetching users", data: [] };
   }
-  return response.json();
 }
 
 export async function getUserById(id: number | string): Promise<SingleUserResponse> {
-  const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User/${id}`, { 
-    headers, 
-    next: { tags: [`user-${id}`, "users"] } 
-  });
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch user with ID: ${id}`);
+  try {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/User/${id}`, { 
+      headers, 
+      cache: "no-store",
+      next: { tags: [`user-${id}`, "users"] } 
+    });
+    
+    if (!response.ok) {
+      return { success: false, message: `Failed to fetch user ${id}`, data: null as any };
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in getUserById:", error);
+    return { success: false, message: `Network error fetching user ${id}`, data: null as any };
   }
-  return response.json();
 }
 
 export async function createUser(data: any): Promise<SingleUserResponse> {

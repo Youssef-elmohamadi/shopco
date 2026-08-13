@@ -20,14 +20,29 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export async function fetchHomeData(): Promise<HomeApiResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/Home`, {
-    cache: "no-store", 
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Home`, {
+      cache: "no-store", 
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch home data");
+    if (!response.ok) {
+      return {
+        success: false,
+        message: "Failed to fetch home data",
+        data: { latestProducts: [], categories: [], popularProducts: [] },
+        errors: null
+      };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchHomeData:", error);
+    return {
+      success: false,
+      message: "Network error fetching home data",
+      data: { latestProducts: [], categories: [], popularProducts: [] },
+      errors: error
+    };
   }
-
-  return response.json();
 }
 
