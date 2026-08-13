@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== "production") {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
-const API_BASE_URL = "https://localhost:7260/api/User";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/User` : "https://localhost:7260/api/User";
 
 export async function getUserProfile() {
   const cookieStore = await cookies();

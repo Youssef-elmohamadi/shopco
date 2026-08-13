@@ -9,7 +9,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Base URL for your ASP.NET Core API
-const API_BASE_URL = "https://localhost:7260/api/Auth";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/Auth` : "https://localhost:7260/api/Auth";
 
 export type AuthState = {
   success?: boolean;
