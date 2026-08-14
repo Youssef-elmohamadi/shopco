@@ -13,10 +13,10 @@ import * as categoryService from "@/services/categoryService";
 import { Category } from "@/services/categoryService";
 
 import { getClientCache, setClientCache, clearClientCache } from "@/utils/clientCache";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function CategoryManager() {
   const itemsPerPage = 5;
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -207,7 +207,7 @@ export default function CategoryManager() {
                         <div className="relative h-12 w-12 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
                           {category.imageUrl ? (
                             <Image
-                              src={category.imageUrl.startsWith("http") ? category.imageUrl : `${API_BASE_URL}${category.imageUrl}`}
+                              src={getImageUrl(category.imageUrl)}
                               alt={category.name}
                               fill
                               className="object-cover"

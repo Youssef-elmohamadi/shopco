@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { createOrder } from "@/services/orderService";
 import { getProfile } from "@/services/userService";
 import { ArrowLeft, CreditCard, Truck, ShieldCheck, ShoppingCart } from "lucide-react";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function CheckoutPage() {
   const { cartItems, total, subtotal, originalSubtotal, discountAmount, promoDiscount, deliveryFee, promoCode, clearCart } = useCart();
@@ -106,8 +107,6 @@ export default function CheckoutPage() {
       }, 1500);
     }
   };
-
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   if (cartItems.length === 0) {
     return null;
@@ -331,7 +330,7 @@ export default function CheckoutPage() {
             {/* Item List */}
             <div className="flex flex-col gap-4 max-h-[350px] overflow-y-auto pr-1">
               {cartItems.map((item) => {
-                const imageUrl = item.image.startsWith("http") ? item.image : `${API_BASE_URL}${item.image}`;
+                const imageUrl = getImageUrl(item.image);
                 return (
                   <div key={item.id} className="flex gap-4 items-center border-b border-gray-50 dark:border-gray-800/40 pb-3 last:border-b-0 last:pb-0">
                     <div className="relative w-16 h-16 bg-[#F0EEED] rounded-xl overflow-hidden shrink-0 border border-gray-250 dark:border-gray-800">

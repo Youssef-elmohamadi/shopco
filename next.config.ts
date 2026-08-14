@@ -27,7 +27,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "www.shopco.somee.com",
+        hostname: "shopco.somee.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },

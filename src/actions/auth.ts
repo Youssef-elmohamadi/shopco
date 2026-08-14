@@ -9,7 +9,8 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Base URL for your ASP.NET Core API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/Auth` : "http://www.shopco.somee.com/api/Auth";
+import { getApiUrl } from "@/utils/apiConfig";
+const getAuthApiUrl = () => `${getApiUrl()}/Auth`;
 
 export type AuthState = {
   success?: boolean;
@@ -36,7 +37,7 @@ export async function registerUser(prevState: AuthState, formData: FormData): Pr
 
   try {
     // 3. Send request to ASP.NET Core API
-    const response = await fetch(`${API_BASE_URL}/register`, {
+    const response = await fetch(`${getAuthApiUrl()}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,14 +54,14 @@ export async function registerUser(prevState: AuthState, formData: FormData): Pr
         return {
           success: false,
           errors: data.errors,
-          message: data.title || "Validation failed.",
+          message: data.title || data?.message || data?.Message || "Validation failed.",
         };
       }
       
       // Other errors (e.g. "Email Already Exist")
       return {
         success: false,
-        message: data?.message || "An error occurred during registration.",
+        message: data?.message || data?.Message || "An error occurred during registration.",
       };
     }
 
@@ -88,7 +89,7 @@ export async function loginUser(prevState: AuthState, formData: FormData): Promi
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
+    const response = await fetch(`${getAuthApiUrl()}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,13 +104,13 @@ export async function loginUser(prevState: AuthState, formData: FormData): Promi
         return {
           success: false,
           errors: data.errors,
-          message: data.title || "Validation failed.",
+          message: data.title || data?.message || data?.Message || "Validation failed.",
         };
       }
       
       return {
         success: false,
-        message: data?.message || "Invalid password or email.",
+        message: data?.message || data?.Message || "Invalid password or email.",
       };
     }
 
@@ -124,7 +125,6 @@ export async function loginUser(prevState: AuthState, formData: FormData): Promi
         path: "/",
         maxAge: 60 * 60 * 24 * 7, // 1 week
       });
-
     }
 
   } catch (error) {

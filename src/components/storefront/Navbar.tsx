@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, ShoppingCart, User, ChevronDown, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { getImageUrl } from "@/utils/apiConfig";
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -145,9 +146,8 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
                 </h4>
                 <div className="flex flex-col gap-2">
                   {searchResults.products.map((prod) => {
-                    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
                     const firstImage = prod.images?.[0]?.url || "";
-                    const imageUrl = firstImage.startsWith('http') ? firstImage : `${API_BASE_URL}${firstImage}`;
+                    const imageUrl = getImageUrl(firstImage);
 
                     return (
                       <Link
@@ -293,8 +293,7 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
                   <>
                     <div className="flex flex-col gap-4 max-h-60 overflow-y-auto pr-1">
                       {cartItems.map((item) => {
-                        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
-                        const imageUrl = item.image.startsWith('http') ? item.image : `${API_BASE_URL}${item.image}`;
+                        const imageUrl = getImageUrl(item.image);
                         
                         return (
                           <div key={item.id} className="flex gap-3 items-center border-b border-gray-50 dark:border-gray-800/40 pb-3 last:border-b-0 last:pb-0">

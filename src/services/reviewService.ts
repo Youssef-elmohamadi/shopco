@@ -18,7 +18,9 @@ export interface ReviewResponse {
   message?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getReviewApiUrl = () => `${getApiUrl()}/Review`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -33,7 +35,7 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 
 export async function getProductReviews(productId: number | string): Promise<ReviewResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Review/product/${productId}`, { 
+  const response = await fetch(`${getReviewApiUrl()}/product/${productId}`, { 
     headers,
     cache: "no-store" 
   });
@@ -46,7 +48,7 @@ export async function getProductReviews(productId: number | string): Promise<Rev
 
 export async function createReview(productId: number, rating: number, comment: string) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Review`, {
+  const response = await fetch(`${getReviewApiUrl()}`, {
     method: "POST",
     headers,
     body: JSON.stringify({ productId, rating, comment }),

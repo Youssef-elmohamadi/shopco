@@ -30,7 +30,10 @@ export interface SingleRoleResponse {
   errors?: Record<string, string[]>;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getRoleApiUrl = () => `${getApiUrl()}/Role`;
+const getPermissionApiUrl = () => `${getApiUrl()}/Permission`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -51,7 +54,7 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 export async function fetchRoles(): Promise<ArrayRoleResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/Role`, { headers, cache: 'no-store' });
+    const response = await fetch(`${getRoleApiUrl()}`, { headers, cache: 'no-store' });
     
     if (!response.ok) {
       return { success: false, message: "Failed to fetch roles", data: [] };
@@ -66,7 +69,7 @@ export async function fetchRoles(): Promise<ArrayRoleResponse> {
 export async function getRoleById(id: number | string): Promise<SingleRoleResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/Role/${id}`, { headers, cache: 'no-store' });
+    const response = await fetch(`${getRoleApiUrl()}/${id}`, { headers, cache: 'no-store' });
     
     if (!response.ok) {
       return { success: false, message: `Failed to fetch role ${id}`, data: null as any };
@@ -80,7 +83,7 @@ export async function getRoleById(id: number | string): Promise<SingleRoleRespon
 
 export async function createRole(data: { name: string; description?: string; permissionIds?: number[] }) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Role`, {
+  const response = await fetch(`${getRoleApiUrl()}`, {
     method: "POST",
     headers,
     body: JSON.stringify(data), 
@@ -90,7 +93,7 @@ export async function createRole(data: { name: string; description?: string; per
 
 export async function updateRole(id: number | string, data: { name: string; description?: string; permissionIds?: number[] }) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Role/${id}`, {
+  const response = await fetch(`${getRoleApiUrl()}/${id}`, {
     method: "PUT",
     headers,
     body: JSON.stringify(data), 
@@ -100,7 +103,7 @@ export async function updateRole(id: number | string, data: { name: string; desc
 
 export async function deleteRole(id: number | string) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Role/${id}`, {
+  const response = await fetch(`${getRoleApiUrl()}/${id}`, {
     method: "DELETE",
     headers,
   });
@@ -111,7 +114,7 @@ export async function deleteRole(id: number | string) {
 export async function fetchPermissions() {
   const headers = await getAuthHeaders();
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Permission`, { headers, cache: 'no-store' });
+    const response = await fetch(getPermissionApiUrl(), { headers, cache: 'no-store' });
     if (response.ok) {
       return response.json();
     }

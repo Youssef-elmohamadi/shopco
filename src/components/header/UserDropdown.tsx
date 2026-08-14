@@ -5,11 +5,11 @@ import React, { useState, useEffect } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { getProfile, User } from "@/services/userService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     getProfile()
@@ -38,7 +38,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
           {user?.imageUrl ? (
             <img
-              src={API_URL + user.imageUrl}
+              src={getImageUrl(user.imageUrl)}
               alt="User"
               className="w-full h-full object-cover"
             />

@@ -4,13 +4,13 @@ A modern, responsive Admin Dashboard for the Shop.co E-commerce platform, built 
 
 ## 🚀 Live API Reference
 The dashboard is powered by the backend API hosted at:  
-**Base URL:** [https://www.shopco.somee.com/](https://www.shopco.somee.com/)
+**Base URL:** [http://www.shopco.somee.com/](http://www.shopco.somee.com/)
 
 ## 🛠️ Technologies Used
 - **Framework:** Next.js (React)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS / Custom CSS
-- **HTTP Client:** Axios / Fetch API
+- **HTTP Client:** Fetch API (Server Actions & Client Components)
 
 ## 📦 Features
 - **Dashboard Overview:** Comprehensive metrics and analytics for the e-commerce store.
@@ -34,10 +34,12 @@ The dashboard is powered by the backend API hosted at:
    yarn install
    ```
 3. **Environment Configuration:**
-   Create a `.env` or `.env.local` file in the root directory and configure the API endpoint to point to the live backend (or your local environment):
+   Create a `.env.local` file in the root directory (or copy from `.env.example`):
    ```env
-   NEXT_PUBLIC_API_URL=https://www.shopco.somee.com
+   NEXT_PUBLIC_API_URL=http://www.shopco.somee.com/api
    ```
+   > **Note:** Use `http://` instead of `https://` because Somee.com free hosting tier does not support SSL certificates. Both `http://www.shopco.somee.com` and `http://www.shopco.somee.com/api` are supported and automatically normalized.
+
 4. **Run the Development Server:**
    ```bash
    npm run dev
@@ -48,6 +50,6 @@ The dashboard is powered by the backend API hosted at:
    Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🌍 Deployment
-This Next.js application can be easily deployed to platforms like **Vercel** or **Netlify**. 
-- Ensure that the `NEXT_PUBLIC_API_URL` environment variable is set in your deployment platform's settings.
-- Use `https://www.shopco.somee.com` to avoid Mixed Content (HTTP/HTTPS) errors in production.
+This Next.js application can be deployed to platforms like **Vercel** or **Netlify**. 
+- Set `NEXT_PUBLIC_API_URL=http://www.shopco.somee.com/api` in your deployment environment variables.
+- Next.js server actions and API rewrites in `next.config.ts` will safely proxy requests without Mixed Content errors.

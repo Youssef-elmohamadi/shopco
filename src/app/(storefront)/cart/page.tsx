@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Trash2, Plus, Minus, Tag, ArrowRight, ShoppingBag } from "lucide-react";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function CartPage() {
   const {
@@ -44,8 +45,6 @@ export default function CartPage() {
     }
   };
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
-
   return (
     <div className="bg-white dark:bg-gray-950 min-h-screen py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,7 +83,7 @@ export default function CartPage() {
             <div className="lg:col-span-7 border border-gray-200/80 dark:border-gray-800 rounded-3xl p-4 sm:p-6 bg-white dark:bg-gray-900/40">
               <div className="flex flex-col gap-6">
                 {cartItems.map((item, idx) => {
-                  const imageUrl = item.image.startsWith("http") ? item.image : `${API_BASE_URL}${item.image}`;
+                  const imageUrl = getImageUrl(item.image);
                   
                   return (
                     <div key={item.id}>

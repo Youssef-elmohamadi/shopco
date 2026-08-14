@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Product } from "@/services/productService";
 import { Star, StarHalf } from "lucide-react";
 import WishlistButton from "./WishlistButton";
+import { getImageUrl } from "@/utils/apiConfig";
 
 interface ProductCardProps {
   product: Product;
@@ -11,10 +12,8 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   // Use absolute URL for the image if it exists, otherwise a placeholder
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
-  const imageUrl = product.images && product.images.length > 0
-    ? (product.images[0].url.startsWith('http') ? product.images[0].url : `${API_BASE_URL}${product.images[0].url}`)
-    : "/images/placeholder.png";
+  const firstImage = product.images && product.images.length > 0 ? product.images[0].url : "";
+  const imageUrl = getImageUrl(firstImage) || "/images/placeholder.png";
 
   const hasDiscount = product.discountPrice > 0;
   const currentPrice = hasDiscount ? product.discountPrice : product.price;

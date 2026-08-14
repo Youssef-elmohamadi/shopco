@@ -27,7 +27,9 @@ export interface DashboardResponse {
   errors?: Record<string, string[]>;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getDashboardApiUrl = () => `${getApiUrl()}/Dashboard`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -48,7 +50,7 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 export async function fetchDashboardStatistics(): Promise<DashboardResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/Dashboard/statistics`, { 
+    const response = await fetch(`${getDashboardApiUrl()}/statistics`, { 
       headers, 
       cache: 'no-store' 
     });

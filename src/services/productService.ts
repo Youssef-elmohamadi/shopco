@@ -59,7 +59,9 @@ export interface SingleProductResponse {
 }
 
 import { revalidateTag } from "next/cache";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getProductApiUrl = () => `${getApiUrl()}/Product`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // Helper to get the auth header using the HTTP-Only cookie
@@ -91,7 +93,7 @@ export async function fetchProducts(
   sortDescending?: boolean
 ): Promise<PagedProductResponse> {
   try {
-    const url = new URL(`${API_BASE_URL}/api/Product`);
+    const url = new URL(getProductApiUrl());
     url.searchParams.append("PageNumber", page.toString());
     url.searchParams.append("PageSize", pageSize.toString());
     if (search) url.searchParams.append("Search", search);
@@ -129,7 +131,7 @@ export async function fetchProducts(
 export async function getProductById(id: number | string): Promise<SingleProductResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/Product/${id}`, { 
+    const response = await fetch(`${getProductApiUrl()}/${id}`, { 
       headers,
       cache: "no-store",
       next: { tags: [`product-${id}`, "products"] }
@@ -154,7 +156,7 @@ export async function getProductById(id: number | string): Promise<SingleProduct
 
 export async function createProduct(formData: FormData) {
   const headers = await getAuthHeaders(true);
-  const response = await fetch(`${API_BASE_URL}/api/Product`, {
+  const response = await fetch(`${getProductApiUrl()}`, {
     method: "POST",
     headers,
     body: formData, 
@@ -168,7 +170,7 @@ export async function createProduct(formData: FormData) {
 
 export async function updateProduct(id: number | string, formData: FormData) {
   const headers = await getAuthHeaders(true);
-  const response = await fetch(`${API_BASE_URL}/api/Product/${id}`, {
+  const response = await fetch(`${getProductApiUrl()}/${id}`, {
     method: "PUT",
     headers,
     body: formData, 
@@ -183,7 +185,7 @@ export async function updateProduct(id: number | string, formData: FormData) {
 
 export async function deleteProduct(id: number | string) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Product/${id}`, {
+  const response = await fetch(`${getProductApiUrl()}/${id}`, {
     method: "DELETE",
     headers,
   });

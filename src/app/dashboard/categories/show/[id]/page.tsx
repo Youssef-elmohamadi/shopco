@@ -8,6 +8,7 @@ import Image from "next/image";
 
 import * as categoryService from "@/services/categoryService";
 import { Category } from "@/services/categoryService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function ShowCategoryPage() {
   const params = useParams();
@@ -16,8 +17,6 @@ export default function ShowCategoryPage() {
   const [category, setCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     if (id) {
@@ -59,7 +58,7 @@ export default function ShowCategoryPage() {
             <div className="relative h-48 w-48 shrink-0 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
               {category.imageUrl ? (
                 <Image
-                  src={category.imageUrl.startsWith("http") ? category.imageUrl : `${API_BASE_URL}${category.imageUrl}`}
+                  src={getImageUrl(category.imageUrl)}
                   alt={category.name}
                   fill
                   className="object-cover"

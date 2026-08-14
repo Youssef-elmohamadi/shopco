@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchHomeData } from "@/services/homeService";
 import { fetchBrands } from "@/services/brandService";
 import ProductSlider from "@/components/storefront/ProductSlider";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default async function StorefrontHomePage() {
   let homeData = null;
@@ -156,7 +157,7 @@ export default async function StorefrontHomePage() {
                   <div className="absolute inset-0 bg-white z-0">
                     {category.imageUrl && (
                       <Image 
-                        src={category.imageUrl.startsWith('http') ? category.imageUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://www.shopco.somee.com'}${category.imageUrl}`} 
+                        src={getImageUrl(category.imageUrl)} 
                         alt={category.name}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"

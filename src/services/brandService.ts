@@ -24,7 +24,9 @@ export interface SingleBrandResponse {
   message?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getBrandApiUrl = () => `${getApiUrl()}/Brand`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(isFormData = false): Promise<HeadersInit> {
@@ -44,7 +46,7 @@ async function getAuthHeaders(isFormData = false): Promise<HeadersInit> {
 
 export async function fetchBrands(): Promise<BrandResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Brand`, { 
+  const response = await fetch(`${getBrandApiUrl()}`, { 
     headers,
     next: { tags: ["brands"] }
   });
@@ -57,7 +59,7 @@ export async function fetchBrands(): Promise<BrandResponse> {
 
 export async function getBrandById(id: number | string): Promise<SingleBrandResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Brand/${id}`, { 
+  const response = await fetch(`${getBrandApiUrl()}/${id}`, { 
     headers,
     next: { tags: [`brand-${id}`, "brands"] }
   });
@@ -70,7 +72,7 @@ export async function getBrandById(id: number | string): Promise<SingleBrandResp
 
 export async function createBrand(formData: FormData) {
   const headers = await getAuthHeaders(true); // true for FormData
-  const response = await fetch(`${API_BASE_URL}/api/Brand`, {
+  const response = await fetch(`${getBrandApiUrl()}`, {
     method: "POST",
     headers,
     body: formData,
@@ -87,7 +89,7 @@ export async function createBrand(formData: FormData) {
 
 export async function updateBrand(id: number | string, formData: FormData) {
   const headers = await getAuthHeaders(true); // true for FormData
-  const response = await fetch(`${API_BASE_URL}/api/Brand/${id}`, {
+  const response = await fetch(`${getBrandApiUrl()}/${id}`, {
     method: "PUT",
     headers,
     body: formData,
@@ -105,7 +107,7 @@ export async function updateBrand(id: number | string, formData: FormData) {
 
 export async function deleteBrand(id: number | string) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Brand/${id}`, {
+  const response = await fetch(`${getBrandApiUrl()}/${id}`, {
     method: "DELETE",
     headers,
   });

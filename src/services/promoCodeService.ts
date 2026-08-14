@@ -39,7 +39,9 @@ export interface SinglePromoCodeResponse {
   Errors?: Record<string, string[]>;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getPromoCodeApiUrl = () => `${getApiUrl()}/PromoCode`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
@@ -60,7 +62,7 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 export async function fetchPromoCodes(): Promise<PromoCodeListResponse> {
   const headers = await getAuthHeaders();
   
-  const response = await fetch(`${API_BASE_URL}/api/PromoCode`, { 
+  const response = await fetch(`${getPromoCodeApiUrl()}`, { 
     headers,
     next: { tags: ["promo-codes"] }
   });
@@ -76,7 +78,7 @@ export async function fetchPromoCodes(): Promise<PromoCodeListResponse> {
 
 export async function getPromoCodeById(id: number | string): Promise<SinglePromoCodeResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/PromoCode/${id}`, { 
+  const response = await fetch(`${getPromoCodeApiUrl()}/${id}`, { 
     headers,
     next: { tags: [`promo-code-${id}`, "promo-codes"] }
   });
@@ -92,7 +94,7 @@ export async function getPromoCodeById(id: number | string): Promise<SinglePromo
 
 export async function createPromoCode(data: any) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/PromoCode`, {
+  const response = await fetch(`${getPromoCodeApiUrl()}`, {
     method: "POST",
     headers,
     body: JSON.stringify(data), 
@@ -110,7 +112,7 @@ export async function createPromoCode(data: any) {
 
 export async function updatePromoCode(id: number | string, data: any) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/PromoCode/${id}`, {
+  const response = await fetch(`${getPromoCodeApiUrl()}/${id}`, {
     method: "PUT",
     headers,
     body: JSON.stringify(data), 
@@ -129,7 +131,7 @@ export async function updatePromoCode(id: number | string, data: any) {
 
 export async function deletePromoCode(id: number | string) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/PromoCode/${id}`, {
+  const response = await fetch(`${getPromoCodeApiUrl()}/${id}`, {
     method: "DELETE",
     headers,
   });
@@ -147,7 +149,7 @@ export async function deletePromoCode(id: number | string) {
 
 export async function applyPromoCode(code: string, subtotal: number) {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/PromoCode/apply`, {
+  const response = await fetch(`${getPromoCodeApiUrl()}/apply`, {
     method: "POST",
     headers,
     body: JSON.stringify({ code, subtotal }), 

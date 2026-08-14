@@ -2,7 +2,9 @@
 
 import { cookies } from "next/headers";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getWishlistApiUrl = () => `${getApiUrl()}/Wishlist`;
 
 async function getAuthHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
@@ -40,7 +42,7 @@ export async function getMyWishlist(): Promise<WishlistItem[]> {
       return [];
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/Wishlist`, { headers, cache: 'no-store' });
+    const response = await fetch(`${getWishlistApiUrl()}`, { headers, cache: 'no-store' });
     
     if (!response.ok) {
       return [];
@@ -56,7 +58,7 @@ export async function getMyWishlist(): Promise<WishlistItem[]> {
 
 export async function toggleWishlist(productId: number | string): Promise<{ success: boolean; message: string; isFavorited: boolean }> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Wishlist/toggle/${productId}`, { 
+  const response = await fetch(`${getWishlistApiUrl()}/toggle/${productId}`, { 
     method: 'POST',
     headers, 
     cache: 'no-store' 
@@ -80,7 +82,7 @@ export async function checkWishlist(productId: number | string): Promise<boolean
     return false;
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/Wishlist/check/${productId}`, { headers, cache: 'no-store' });
+  const response = await fetch(`${getWishlistApiUrl()}/check/${productId}`, { headers, cache: 'no-store' });
   
   if (!response.ok) {
     return false;

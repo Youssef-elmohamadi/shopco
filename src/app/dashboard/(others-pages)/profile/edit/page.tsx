@@ -7,13 +7,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getProfile, updateProfile, User } from "@/services/userService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function EditProfilePage() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     getProfile()
@@ -95,7 +95,7 @@ export default function EditProfilePage() {
                   <Input type="file" name="profileImage" accept="image/*" />
                   {profile?.imageUrl && (
                     <div className="mt-2 text-sm text-gray-500">
-                      Current: <img src={API_URL + profile.imageUrl} alt="Profile" className="h-10 w-10 rounded-full inline-block object-cover" />
+                      Current: <img src={getImageUrl(profile.imageUrl)} alt="Profile" className="h-10 w-10 rounded-full inline-block object-cover" />
                     </div>
                   )}
                 </div>

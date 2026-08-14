@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import Image from "next/image";
+import { getImageUrl as formatImageUrl } from "@/utils/apiConfig";
 
 interface ProductImage {
   id: number;
@@ -40,12 +41,9 @@ export default function ProductImageGallery({ images, productName }: ProductImag
 
   const activeImage = images[activeImageIndex];
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
   const getImageUrl = (url?: string) => {
     if (!url) return "/images/placeholder.png";
-    if (url.startsWith("http://") || url.startsWith("https://")) return url;
-    if (url.startsWith("/")) return `${API_BASE_URL}${url}`;
-    return `${API_BASE_URL}/${url}`;
+    return formatImageUrl(url) || "/images/placeholder.png";
   };
 
   return (

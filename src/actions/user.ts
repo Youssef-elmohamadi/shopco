@@ -7,7 +7,8 @@ if (process.env.NODE_ENV !== "production") {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/User` : "http://www.shopco.somee.com/api/User";
+import { getApiUrl } from "@/utils/apiConfig";
+const getUserApiUrl = () => `${getApiUrl()}/User`;
 
 export async function getUserProfile() {
   const cookieStore = await cookies();
@@ -18,7 +19,7 @@ export async function getUserProfile() {
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}/profile`, {
+    const res = await fetch(`${getUserApiUrl()}/profile`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,

@@ -7,6 +7,7 @@ import Button from "@/components/ui/button/Button";
 import Image from "next/image";
 
 import { getProductById, Product } from "@/services/productService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function ShowProductPage() {
   const params = useParams();
@@ -15,8 +16,6 @@ export default function ShowProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     if (id) {
@@ -62,7 +61,7 @@ export default function ShowProductPage() {
                 <>
                   <div className="relative h-64 w-full overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
                     <Image
-                      src={product.images[0].url.startsWith("http") ? product.images[0].url : `${API_BASE_URL}${product.images[0].url}`}
+                      src={getImageUrl(product.images[0].url)}
                       alt={product.name}
                       fill
                       className="object-cover"
@@ -73,7 +72,7 @@ export default function ShowProductPage() {
                       {product.images.slice(1).map((img, idx) => (
                         <div key={idx} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
                           <Image
-                            src={img.url.startsWith("http") ? img.url : `${API_BASE_URL}${img.url}`}
+                            src={getImageUrl(img.url)}
                             alt={`${product.name} ${idx + 1}`}
                             fill
                             className="object-cover"

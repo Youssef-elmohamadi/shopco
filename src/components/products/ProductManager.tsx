@@ -10,10 +10,10 @@ import { Modal } from "@/components/ui/modal";
 
 import { fetchProducts, deleteProduct, Product } from "@/services/productService";
 import { getClientCache, setClientCache, clearClientCache } from "@/utils/clientCache";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function ProductManager() {
   const itemsPerPage = 5;
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -211,7 +211,7 @@ export default function ProductManager() {
                           <div className="relative h-12 w-12 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
                             {firstImage ? (
                               <Image
-                                src={firstImage.startsWith("http") ? firstImage : `${API_BASE_URL}${firstImage}`}
+                                src={getImageUrl(firstImage)}
                                 alt={product.name}
                                 fill
                                 className="object-cover"

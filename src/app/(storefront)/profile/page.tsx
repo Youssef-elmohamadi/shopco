@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { getProfile, updateProfile, User } from "@/services/userService";
 import { User as UserIcon } from "lucide-react";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     fetchProfile();
@@ -118,7 +118,7 @@ export default function ProfilePage() {
               <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                 {profile?.imageUrl ? (
                   <img
-                    src={API_URL + profile.imageUrl}
+                    src={getImageUrl(profile.imageUrl)}
                     alt="Profile"
                     className="h-full w-full object-cover"
                   />

@@ -31,14 +31,16 @@ export interface SingleCategoryResponse {
   data: Category;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getCategoryApiUrl = () => `${getApiUrl()}/Category`;
 
 /**
  * Fetch a paginated list of categories
  */
 export async function fetchCategories(page: number = 1, pageSize: number = 5, searchName: string = ""): Promise<PagedCategoryResponse> {
   try {
-    const url = new URL(`${API_BASE_URL}/api/Category`);
+    const url = new URL(getCategoryApiUrl());
     url.searchParams.append("pageNumber", page.toString());
     url.searchParams.append("pageSize", pageSize.toString());
     if (searchName) {
@@ -72,7 +74,7 @@ export async function fetchCategories(page: number = 1, pageSize: number = 5, se
  */
 export async function getCategoryById(id: number | string): Promise<SingleCategoryResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Category/${id}`, {
+    const response = await fetch(`${getCategoryApiUrl()}/${id}`, {
       cache: "no-store",
       next: { tags: [`category-${id}`, "categories"] }
     });
@@ -98,7 +100,7 @@ export async function getCategoryById(id: number | string): Promise<SingleCatego
  * Create a new category using FormData
  */
 export async function createCategory(formData: FormData) {
-  const response = await fetch(`${API_BASE_URL}/api/Category`, {
+  const response = await fetch(`${getCategoryApiUrl()}`, {
     method: "POST",
     body: formData,
   });
@@ -119,7 +121,7 @@ export async function createCategory(formData: FormData) {
  * Update an existing category using FormData
  */
 export async function updateCategory(id: number | string, formData: FormData) {
-  const response = await fetch(`${API_BASE_URL}/api/Category/${id}`, {
+  const response = await fetch(`${getCategoryApiUrl()}/${id}`, {
     method: "PUT",
     body: formData,
   });
@@ -141,7 +143,7 @@ export async function updateCategory(id: number | string, formData: FormData) {
  * Delete a category by ID
  */
 export async function deleteCategory(id: number | string) {
-  const response = await fetch(`${API_BASE_URL}/api/Category/${id}`, {
+  const response = await fetch(`${getCategoryApiUrl()}/${id}`, {
     method: "DELETE",
   });
   

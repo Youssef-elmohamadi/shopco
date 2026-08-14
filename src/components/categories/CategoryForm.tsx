@@ -9,6 +9,7 @@ import Image from "next/image";
 
 import * as categoryService from "@/services/categoryService";
 import { Category } from "@/services/categoryService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 interface CategoryFormProps {
   categoryToEdit?: Category | null;
@@ -24,23 +25,17 @@ export default function CategoryForm({ categoryToEdit }: CategoryFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
-
   useEffect(() => {
     if (categoryToEdit) {
       setName(categoryToEdit.name);
       setDescription(categoryToEdit.description || "");
       if (categoryToEdit.imageUrl) {
-        setPreviewImage(
-          categoryToEdit.imageUrl.startsWith("http")
-            ? categoryToEdit.imageUrl
-            : `${API_BASE_URL}${categoryToEdit.imageUrl}`
-        );
+        setPreviewImage(getImageUrl(categoryToEdit.imageUrl));
       } else {
         setPreviewImage(null);
       }
     }
-  }, [categoryToEdit, API_BASE_URL]);
+  }, [categoryToEdit]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {

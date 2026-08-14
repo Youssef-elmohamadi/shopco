@@ -3,10 +3,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "@/services/userService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function UserMetaCard({ user }: { user?: User | null }) {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
-
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -15,7 +14,7 @@ export default function UserMetaCard({ user }: { user?: User | null }) {
             <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
               {user?.imageUrl ? (
                 <img
-                  src={API_URL + user.imageUrl}
+                  src={getImageUrl(user.imageUrl)}
                   alt="user"
                   className="w-full h-full object-cover"
                 />

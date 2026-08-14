@@ -48,7 +48,10 @@ export interface BaseResponse {
   errors?: Record<string, string[]>;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getOrderApiUrl = () => `${getApiUrl()}/Order`;
+const getCartApiUrl = () => `${getApiUrl()}/Cart`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(isAdminApp: boolean = true): Promise<HeadersInit> {
@@ -72,7 +75,7 @@ async function getAuthHeaders(isAdminApp: boolean = true): Promise<HeadersInit> 
 export async function fetchAllOrders(): Promise<ArrayOrderResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/Order/all`, { headers, cache: 'no-store' });
+    const response = await fetch(`${getOrderApiUrl()}/all`, { headers, cache: 'no-store' });
     
     if (!response.ok) {
       return { success: false, message: "Failed to fetch all orders", data: [] };
@@ -87,7 +90,7 @@ export async function fetchAllOrders(): Promise<ArrayOrderResponse> {
 export async function getMyOrders(isAdminApp: boolean = true): Promise<ArrayOrderResponse> {
   try {
     const headers = await getAuthHeaders(isAdminApp);
-    const response = await fetch(`${API_BASE_URL}/api/Order`, { headers, cache: 'no-store' });
+    const response = await fetch(`${getOrderApiUrl()}`, { headers, cache: 'no-store' });
     
     if (!response.ok) {
       return { success: false, message: "Failed to fetch orders", data: [] };
@@ -102,7 +105,7 @@ export async function getMyOrders(isAdminApp: boolean = true): Promise<ArrayOrde
 export async function getOrderById(id: number | string, isAdminApp: boolean = true): Promise<SingleOrderResponse> {
   try {
     const headers = await getAuthHeaders(isAdminApp);
-    const response = await fetch(`${API_BASE_URL}/api/Order/${id}`, { headers, cache: 'no-store' });
+    const response = await fetch(`${getOrderApiUrl()}/${id}`, { headers, cache: 'no-store' });
     
     if (!response.ok) {
       return { success: false, message: `Failed to fetch order ${id}`, data: null as any };
@@ -116,7 +119,7 @@ export async function getOrderById(id: number | string, isAdminApp: boolean = tr
 
 export async function changeOrderStatus(id: number | string, status: string): Promise<SingleOrderResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/Order/${id}/status`, {
+  const response = await fetch(`${getOrderApiUrl()}/${id}/status`, {
     method: "PUT",
     headers,
     body: JSON.stringify({ status }), 
@@ -154,7 +157,7 @@ export async function createOrder(
 
   // 1. Clear any existing cart items in the database for the user
   try {
-    await fetch(`${API_BASE_URL}/api/Cart`, {
+    await fetch(`${getCartApiUrl()}`, {
       method: "DELETE",
       headers,
     });
@@ -165,7 +168,7 @@ export async function createOrder(
   // 2. Add each frontend item to the database cart
   for (const item of items) {
     try {
-      await fetch(`${API_BASE_URL}/api/Cart/items`, {
+      await fetch(`${getCartApiUrl()}/items`, {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -193,7 +196,7 @@ export async function createOrder(
     promoCode: checkoutData.promoCode,
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/Order/checkout`, {
+  const response = await fetch(`${getOrderApiUrl()}/checkout`, {
     method: "POST",
     headers,
     body: JSON.stringify(checkoutPayload),

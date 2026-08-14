@@ -5,12 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heart, Trash2 } from "lucide-react";
 import { getMyWishlist, toggleWishlist, WishlistItem } from "@/services/wishlistService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 export default function WishlistPage() {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     fetchWishlist();
@@ -96,7 +96,7 @@ export default function WishlistPage() {
                   <Link href={`/product/${item.productId}`}>
                     {item.product.imageUrl ? (
                       <Image 
-                        src={API_URL + item.product.imageUrl} 
+                        src={getImageUrl(item.product.imageUrl)} 
                         alt={item.product.name}
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-500"

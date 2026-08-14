@@ -12,6 +12,7 @@ import { createProduct, updateProduct, Product, ProductVariant } from "@/service
 import * as categoryService from "@/services/categoryService";
 import { Category } from "@/services/categoryService";
 import { fetchBrands, Brand } from "@/services/brandService";
+import { getImageUrl } from "@/utils/apiConfig";
 
 interface ProductFormProps {
   productToEdit?: Product | null;
@@ -38,8 +39,6 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
-
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
 
   useEffect(() => {
     // Fetch categories for dropdown
@@ -83,7 +82,7 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
         setExistingImages(
           productToEdit.images.map(img => ({
             id: img.id,
-            url: img.url.startsWith("http") ? img.url : `${API_BASE_URL}${img.url}`
+            url: getImageUrl(img.url)
           }))
         );
       }
@@ -92,7 +91,7 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
         setVariants(productToEdit.variants);
       }
     }
-  }, [productToEdit, API_BASE_URL]);
+  }, [productToEdit]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {

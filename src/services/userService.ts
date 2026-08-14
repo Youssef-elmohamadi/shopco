@@ -49,7 +49,9 @@ export interface BaseResponse {
   errors?: Record<string, string[]>;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
+import { getApiUrl } from "@/utils/apiConfig";
+
+const getUserApiUrl = () => `${getApiUrl()}/User`;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 async function getAuthHeaders(isAdminApp: boolean = true): Promise<HeadersInit> {
@@ -73,7 +75,7 @@ async function getAuthHeaders(isAdminApp: boolean = true): Promise<HeadersInit> 
 export async function fetchUsers(): Promise<ArrayUserResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/User`, { 
+    const response = await fetch(`${getUserApiUrl()}`, { 
       headers, 
       cache: "no-store",
       next: { tags: ["users"] } 
@@ -92,7 +94,7 @@ export async function fetchUsers(): Promise<ArrayUserResponse> {
 export async function getUserById(id: number | string): Promise<SingleUserResponse> {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/api/User/${id}`, { 
+    const response = await fetch(`${getUserApiUrl()}/${id}`, { 
       headers, 
       cache: "no-store",
       next: { tags: [`user-${id}`, "users"] } 
@@ -110,7 +112,7 @@ export async function getUserById(id: number | string): Promise<SingleUserRespon
 
 export async function createUser(data: any): Promise<SingleUserResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User`, {
+  const response = await fetch(`${getUserApiUrl()}`, {
     method: "POST",
     headers,
     body: JSON.stringify(data), 
@@ -124,7 +126,7 @@ export async function createUser(data: any): Promise<SingleUserResponse> {
 
 export async function updateUser(id: number | string, data: any): Promise<SingleUserResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User/${id}`, {
+  const response = await fetch(`${getUserApiUrl()}/${id}`, {
     method: "PUT",
     headers,
     body: JSON.stringify(data), 
@@ -139,7 +141,7 @@ export async function updateUser(id: number | string, data: any): Promise<Single
 
 export async function deleteUser(id: number | string): Promise<BaseResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User/${id}`, {
+  const response = await fetch(`${getUserApiUrl()}/${id}`, {
     method: "DELETE",
     headers,
   });
@@ -153,7 +155,7 @@ export async function deleteUser(id: number | string): Promise<BaseResponse> {
 
 export async function assignRoleToUser(userId: number | string, roleId: number): Promise<BaseResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User/${userId}/roles`, {
+  const response = await fetch(`${getUserApiUrl()}/${userId}/roles`, {
     method: "POST",
     headers,
     body: JSON.stringify({ roleId }),
@@ -168,7 +170,7 @@ export async function assignRoleToUser(userId: number | string, roleId: number):
 
 export async function removeRoleFromUser(userId: number | string, roleId: number): Promise<BaseResponse> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${API_BASE_URL}/api/User/${userId}/roles/${roleId}`, {
+  const response = await fetch(`${getUserApiUrl()}/${userId}/roles/${roleId}`, {
     method: "DELETE",
     headers,
   });
@@ -182,7 +184,7 @@ export async function removeRoleFromUser(userId: number | string, roleId: number
 
 export async function getProfile(isAdminApp: boolean = true): Promise<SingleUserResponse> {
   const headers = await getAuthHeaders(isAdminApp);
-  const response = await fetch(`${API_BASE_URL}/api/User/profile`, { headers, cache: 'no-store' });
+  const response = await fetch(`${getUserApiUrl()}/profile`, { headers, cache: 'no-store' });
   
   if (!response.ok) {
     throw new Error(`Failed to fetch profile`);
@@ -206,7 +208,7 @@ export async function updateProfile(data: any, isAdminApp: boolean = true): Prom
     headers["Content-Type"] = "application/json";
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/User/profile`, {
+  const response = await fetch(`${getUserApiUrl()}/profile`, {
     method: "PUT",
     headers,
     body: isFormData ? data : JSON.stringify(data), 
