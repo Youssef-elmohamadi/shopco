@@ -1,7 +1,6 @@
 "use client";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
-import { ChevronLeftIcon } from "@/icons";
 import Link from "next/link";
 import React, { useActionState } from "react";
 import PasswordInput from "./PasswordInput";
@@ -15,19 +14,8 @@ export default function SignInForm() {
   const [state, formAction] = useActionState(loginUser, initialState);
 
   return (
-    <div className="flex flex-col flex-1 lg:w-1/2 w-full px-4 sm:px-8">
-      <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 text-sm text-gray-500 transition-all hover:text-black dark:text-gray-400 dark:hover:text-white"
-        >
-          <span className="transition-transform duration-300 group-hover:-translate-x-1">
-            <ChevronLeftIcon />
-          </span>
-          Back to dashboard
-        </Link>
-      </div>
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+    <div className="flex flex-col justify-center flex-1 lg:w-1/2 w-full px-4 sm:px-8 py-6">
+      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto my-auto">
         <div className="backdrop-blur-xl bg-white/80 dark:bg-black/40 border border-gray-200 dark:border-white/10 p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
           <div className="mb-8">
             <h1 className="mb-2 font-bold tracking-tight text-gray-900 text-title-sm dark:text-white sm:text-title-md">
@@ -41,7 +29,7 @@ export default function SignInForm() {
             {/* Social logins omitted for brevity as they are not wired up yet, but we can keep them for UI layout */}
             
             <form action={formAction}>
-              <input type="hidden" name="redirectTo" value="/home" />
+              <input type="hidden" name="redirectTo" value="/" />
               {state.message && (
                 <div className={`mb-4 p-3 text-sm rounded-lg ${state.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
                   {state.message}

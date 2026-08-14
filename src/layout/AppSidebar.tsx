@@ -18,6 +18,7 @@ import {
   UserCircleIcon,
 } from "../icons/index";
 import { LogOut } from "lucide-react";
+import { logoutUser } from "@/actions/auth";
 
 type NavItem = {
   name: string;
@@ -270,10 +271,8 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const handleLogout = () => {
-    document.cookie = "admin_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = "/signin";
+  const handleLogout = async () => {
+    await logoutUser();
   };
 
   return (
