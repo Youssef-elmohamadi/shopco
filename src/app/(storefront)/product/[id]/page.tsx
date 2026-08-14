@@ -1,11 +1,32 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Metadata } from "next";
 import { getProductById, fetchProducts } from "@/services/productService";
 import ReviewSection from "@/components/storefront/ReviewSection";
 import ProductVariantSelector from "@/components/storefront/ProductVariantSelector";
 import ProductSlider from "@/components/storefront/ProductSlider";
 import ProductImageGallery from "@/components/storefront/ProductImageGallery";
 import WishlistButton from "@/components/storefront/WishlistButton";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  try {
+    const response = await getProductById(resolvedParams.id);
+    if (response.success && response.data) {
+      return {
+        title: response.data.name,
+        description: response.data.description || `Buy ${response.data.name} at Shop.co`,
+      };
+    }
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+  }
+  
+  return {
+    title: "Product Not Found",
+  };
+}
+
 
 export default async function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;

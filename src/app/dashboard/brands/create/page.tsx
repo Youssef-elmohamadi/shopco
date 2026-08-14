@@ -1,6 +1,12 @@
 import React from "react";
 import BrandForm from "@/components/brands/BrandForm";
 
+
+export const metadata = {
+  title: "Create Brands Dashboard",
+};
+
+
 export default function CreateBrandPage() {
   return (
     <div className="space-y-6">

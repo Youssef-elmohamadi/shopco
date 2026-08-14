@@ -5,6 +5,12 @@ import { fetchBrands } from "@/services/brandService";
 import ProductSlider from "@/components/storefront/ProductSlider";
 import { getImageUrl } from "@/utils/apiConfig";
 
+
+export const metadata = {
+  title: "Home",
+};
+
+
 export default async function StorefrontHomePage() {
   let homeData = null;
   try {

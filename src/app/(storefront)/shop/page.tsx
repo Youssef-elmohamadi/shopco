@@ -9,6 +9,12 @@ import SortDropdown from "@/components/storefront/SortDropdown";
 import Pagination from "@/components/storefront/Pagination";
 import MobileFilterWrapper from "@/components/storefront/MobileFilterWrapper";
 
+
+export const metadata = {
+  title: "Shop",
+};
+
+
 export default async function ShopPage({
   searchParams,
 }: {

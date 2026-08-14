@@ -4,6 +4,12 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import * as promoCodeService from "@/services/promoCodeService";
 import { notFound } from "next/navigation";
 
+
+export const metadata = {
+  title: "Edit Promo Codes Dashboard",
+};
+
+
 export default async function EditPromoCodePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   let promoCode = null;

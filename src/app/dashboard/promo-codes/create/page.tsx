@@ -2,6 +2,12 @@ import React from "react";
 import PromoCodeForm from "@/components/promo-codes/PromoCodeForm";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 
+
+export const metadata = {
+  title: "Create Promo Codes Dashboard",
+};
+
+
 export default function CreatePromoCodePage() {
   return (
     <div>
