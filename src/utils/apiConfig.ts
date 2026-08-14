@@ -7,12 +7,17 @@
 export function getBaseUrl(): string {
   let url = process.env.NEXT_PUBLIC_API_URL || "http://www.shopco.somee.com";
   
-  // Remove all trailing slashes
+  // Remove all trailing slashes and spaces
   url = url.replace(/\/+$/, "").trim();
   
   // If the URL ends with /api, strip it so we always have the pure host base URL
   if (url.endsWith("/api")) {
     url = url.slice(0, -4);
+  }
+
+  // Ensure protocol exists (if user entered e.g. "shopco-j1sm.vercel.app" or "www.shopco.somee.com")
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = url.includes("somee.com") ? `http://${url}` : `https://${url}`;
   }
   
   // Somee.com free hosting does not support HTTPS (causes ECONNRESET / connection refused).
