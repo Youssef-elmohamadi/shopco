@@ -69,7 +69,7 @@ export default async function Footer() {
               <a href="#" className="bg-white dark:bg-gray-800 p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center">
                 <TwitterIcon size={18} />
               </a>
-              <a href="#" className="bg-black text-white dark:bg-white dark:text-black p-2 rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 transition flex items-center justify-center">
+              <a href="#" className="bg-white dark:bg-gray-800 p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center">
                 <FacebookIcon size={18} />
               </a>
               <a href="#" className="bg-white dark:bg-gray-800 p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center">

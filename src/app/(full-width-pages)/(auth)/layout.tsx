@@ -21,16 +21,22 @@ export default function AuthLayout({
               {/* <!-- ===== Common Grid Shape Start ===== --> */}
               <GridShape />
               <div className="flex flex-col items-center max-w-xs">
-                <Link href="/" className="block mb-4">
-                  <Image
-                    width={231}
-                    height={48}
-                    src="./images/logo/auth-logo.svg"
-                    alt="Logo"
-                  />
+                <Link href="/" className="flex items-center gap-3 mb-6 group">
+                  <div className="bg-white rounded-xl p-1 group-hover:scale-105 transition-transform">
+                    <Image
+                      width={40}
+                      height={40}
+                      src="/icon.jpg"
+                      alt="Shop.co Logo"
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <span className="text-4xl font-black tracking-tighter text-white">
+                    SHOP.CO
+                  </span>
                 </Link>
                 <p className="text-center text-gray-400 dark:text-white/60">
-                  Free and Open-Source Tailwind CSS Admin Dashboard Template
+                  Welcome to the central admin dashboard for managing the Shop.co storefront.
                 </p>
               </div>
             </div>
