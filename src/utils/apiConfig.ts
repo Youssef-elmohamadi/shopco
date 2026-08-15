@@ -35,10 +35,25 @@ export function getApiUrl(): string {
 
 export function getImageUrl(path?: string | null): string {
   if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("blob:") || path.startsWith("data:")) {
-    return path;
+
+  // 1. Normalize Windows backslashes to forward slashes
+  let cleanPath = path.replace(/\\/g, "/").trim();
+
+  // 2. Force http:// for somee.com (Somee free hosting does not support HTTPS)
+  if (cleanPath.includes("somee.com") && cleanPath.startsWith("https://")) {
+    cleanPath = cleanPath.replace(/^https:\/\//i, "http://");
   }
-  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+
+  // 3. If already absolute URL or blob/data
+  if (cleanPath.startsWith("http://") || cleanPath.startsWith("https://") || cleanPath.startsWith("blob:") || cleanPath.startsWith("data:")) {
+    return cleanPath;
+  }
+
+  // 4. Relative paths: prepend base URL
+  if (!cleanPath.startsWith("/")) {
+    cleanPath = `/${cleanPath}`;
+  }
+
   return `${getBaseUrl()}${cleanPath}`;
 }
 

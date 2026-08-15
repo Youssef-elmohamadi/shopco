@@ -8,6 +8,18 @@ const nextConfig: NextConfig = {
       {
         source: '/api/:path*',
         destination: 'http://www.shopco.somee.com/api/:path*'
+      },
+      {
+        source: '/images/products/:path*',
+        destination: 'http://www.shopco.somee.com/images/products/:path*'
+      },
+      {
+        source: '/images/categories/:path*',
+        destination: 'http://www.shopco.somee.com/images/categories/:path*'
+      },
+      {
+        source: '/images/users/:path*',
+        destination: 'http://www.shopco.somee.com/images/users/:path*'
       }
     ];
   },
