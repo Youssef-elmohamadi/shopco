@@ -39,22 +39,23 @@ export function getImageUrl(path?: string | null): string {
   // 1. Normalize Windows backslashes to forward slashes
   let cleanPath = path.replace(/\\/g, "/").trim();
 
-  // 2. Force http:// for somee.com (Somee free hosting does not support HTTPS)
-  if (cleanPath.includes("somee.com") && cleanPath.startsWith("https://")) {
-    cleanPath = cleanPath.replace(/^https:\/\//i, "http://");
-  }
-
-  // 3. If already absolute URL or blob/data
-  if (cleanPath.startsWith("http://") || cleanPath.startsWith("https://") || cleanPath.startsWith("blob:") || cleanPath.startsWith("data:")) {
+  // 2. Blob or Data URLs (for client-side image upload previews)
+  if (cleanPath.startsWith("blob:") || cleanPath.startsWith("data:")) {
     return cleanPath;
   }
 
-  // 4. Relative paths: prepend base URL
-  if (!cleanPath.startsWith("/")) {
-    cleanPath = `/${cleanPath}`;
+  // 3. External trusted HTTPS images (e.g. Unsplash, Cloudinary)
+  if (cleanPath.startsWith("https://") && !cleanPath.includes("somee.com")) {
+    return cleanPath;
   }
 
-  return `${getBaseUrl()}${cleanPath}`;
+  // 4. Local public images (e.g. /images/placeholder.png, /images/icons/...)
+  if (cleanPath.startsWith("/images/placeholder") || cleanPath.startsWith("/images/icons") || cleanPath.startsWith("/images/logo") || cleanPath.startsWith("/images/cards") || cleanPath.startsWith("/images/user") || cleanPath.startsWith("/images/brand")) {
+    return cleanPath;
+  }
+
+  // 5. Backend / Somee images: Route through internal proxy to prevent Mixed Content (HTTP on HTTPS) and Somee SSL issues
+  return `/api/proxy-image?url=${encodeURIComponent(cleanPath)}`;
 }
 
 export const API_BASE_URL = getBaseUrl();
