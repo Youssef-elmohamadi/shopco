@@ -83,7 +83,7 @@ export default function ShopSidebar({ categories, className = "", onClose }: Sho
 
       {/* Categories */}
       <div className="mb-6 pb-6 border-b border-gray-100">
-        <ul className="space-y-3">
+        <ul className="space-y-3 max-h-56 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
           <li>
             <button 
               onClick={() => handleCategoryClick(null)}

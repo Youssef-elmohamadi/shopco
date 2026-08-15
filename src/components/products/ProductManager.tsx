@@ -11,6 +11,7 @@ import { Modal } from "@/components/ui/modal";
 import { fetchProducts, deleteProduct, Product } from "@/services/productService";
 import { getClientCache, setClientCache, clearClientCache } from "@/utils/clientCache";
 import { getImageUrl } from "@/utils/apiConfig";
+import { getPaginationRange } from "@/utils/pagination";
 
 export default function ProductManager() {
   const itemsPerPage = 5;
@@ -23,7 +24,7 @@ export default function ProductManager() {
 
   const [products, setProducts] = useState<Product[]>(initialCachedData?.items || []);
   const [totalPages, setTotalPages] = useState<number>(initialCachedData?.totalPages || 1);
-  const [totalItems, setTotalItems] = useState<number>(initialCachedData?.totalCount || 0);
+  const [totalItems, setTotalItems] = useState<number>(initialCachedData?.totalItems ?? initialCachedData?.totalCount ?? 0);
   const [isLoading, setIsLoading] = useState<boolean>(!initialCachedData);
 
   // Modal State
@@ -46,7 +47,7 @@ export default function ProductManager() {
       if (isSuccess && result.data) {
         setProducts(result.data.items || []);
         setTotalPages(result.data.totalPages || 1);
-        setTotalItems(result.data.totalCount || 0); // Note: backend uses totalCount
+        setTotalItems(result.data.totalItems ?? result.data.totalCount ?? (result.data.items?.length || 0));
         setClientCache(key, result.data);
       }
     } catch (error) {
@@ -302,19 +303,29 @@ export default function ProductManager() {
               </button>
               
               <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === page
-                        ? "bg-brand-500 text-white"
-                        : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
+                {getPaginationRange(currentPage, totalPages).map((page, idx) => {
+                  if (page === "...") {
+                    return (
+                      <span key={`ellipsis-${idx}`} className="flex h-8 w-8 items-center justify-center text-sm text-gray-400">
+                        ...
+                      </span>
+                    );
+                  }
+                  const pageNum = Number(page);
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === pageNum
+                          ? "bg-brand-500 text-white"
+                          : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
               </div>
 
               <button

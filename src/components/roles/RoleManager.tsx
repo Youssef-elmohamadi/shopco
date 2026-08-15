@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components
 import Input from "@/components/form/input/InputField";
 import Link from "next/link";
 import { fetchRoles, deleteRole, Role } from "@/services/roleService";
+import { getPaginationRange } from "@/utils/pagination";
 
 export default function RoleManager() {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -235,19 +236,29 @@ export default function RoleManager() {
             </button>
             
             <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === page
-                      ? "bg-brand-500 text-white"
-                      : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
+              {getPaginationRange(currentPage, totalPages).map((page, idx) => {
+                if (page === "...") {
+                  return (
+                    <span key={`ellipsis-${idx}`} className="flex h-8 w-8 items-center justify-center text-sm text-gray-400">
+                      ...
+                    </span>
+                  );
+                }
+                const pageNum = Number(page);
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                      currentPage === pageNum
+                        ? "bg-brand-500 text-white"
+                        : "text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
             </div>
 
             <button
