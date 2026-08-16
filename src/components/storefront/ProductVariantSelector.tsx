@@ -5,6 +5,7 @@ import { ProductVariant } from "@/services/productService";
 import { Star, StarHalf } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
+import { resolveColorName } from "@/utils/colorHelper";
 
 interface ProductVariantSelectorProps {
   productId: number;
@@ -33,7 +34,7 @@ export default function ProductVariantSelector({
 
   // Extract unique sizes and colors
   const sizes = Array.from(new Set(variants.map(v => v.size).filter(Boolean)));
-  const colors = Array.from(new Set(variants.map(v => v.colorHex).filter(Boolean)));
+  const colors = Array.from(new Set(variants.map(v => v.colorHex?.trim()).filter(Boolean)));
 
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || "");
   const [selectedColor, setSelectedColor] = useState<string>(colors[0] || "");
@@ -41,11 +42,23 @@ export default function ProductVariantSelector({
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  // Find the matched variant
+  // Find the matched variant with case-insensitive matching
   const matchedVariant = variants.find(v => 
-    (!selectedSize || v.size === selectedSize) && 
-    (!selectedColor || v.colorHex === selectedColor)
+    (!selectedSize || v.size?.trim().toLowerCase() === selectedSize.trim().toLowerCase()) && 
+    (!selectedColor || v.colorHex?.trim().toLowerCase() === selectedColor.trim().toLowerCase())
+  ) || variants.find(v => 
+    !selectedColor || v.colorHex?.trim().toLowerCase() === selectedColor.trim().toLowerCase()
+  ) || variants.find(v => 
+    !selectedSize || v.size?.trim().toLowerCase() === selectedSize.trim().toLowerCase()
   ) || variants[0];
+
+  const selectedColorVariant = variants.find(v => 
+    v.colorHex?.trim().toLowerCase() === selectedColor.trim().toLowerCase()
+  );
+
+  const resolvedColorName = selectedColor 
+    ? resolveColorName(selectedColor, selectedColorVariant?.colorName || matchedVariant?.colorName)
+    : undefined;
 
   const currentPrice = matchedVariant?.price || basePrice;
   const currentDiscountPrice = matchedVariant?.discountPrice || baseDiscountPrice;
@@ -80,12 +93,12 @@ export default function ProductVariantSelector({
       price: itemPrice,
       originalPrice: itemOriginalPrice,
       size: selectedSize || undefined,
-      colorName: matchedVariant?.colorName || undefined,
+      colorName: resolvedColorName,
       colorHex: selectedColor || undefined,
       stock: currentStock,
     }, quantity);
 
-    setToastMessage(`Added ${quantity} x "${productName}" (${selectedSize || "N/A"}, ${matchedVariant?.colorName || "N/A"}) to cart.`);
+    setToastMessage(`Added ${quantity} x "${productName}" (${selectedSize || "N/A"}, ${resolvedColorName || "N/A"}) to cart.`);
     setShowToast(true);
   };
 
@@ -135,7 +148,7 @@ export default function ProductVariantSelector({
                 onClick={() => setSelectedColor(color)}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${selectedColor === color ? 'ring-1 ring-offset-2 ring-gray-900' : 'border border-gray-200 hover:border-gray-400'}`}
                 style={{ backgroundColor: color }}
-                title={variants.find(v => v.colorHex === color)?.colorName || color}
+                title={resolveColorName(color, variants.find(v => v.colorHex?.trim().toLowerCase() === color.trim().toLowerCase())?.colorName)}
               >
                 {selectedColor === color && (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isLightColor(color) ? "black" : "white"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { getMyOrders, Order } from "@/services/orderService";
 import { Package, ChevronRight } from "lucide-react";
+import { formatPrice } from "@/utils/price";
 
 export default function MyOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -85,7 +86,7 @@ export default function MyOrdersPage() {
                   <div className="flex items-center justify-between sm:justify-end gap-6 sm:w-1/3">
                     <div className="text-left sm:text-right">
                       <div className="text-sm text-gray-500 dark:text-gray-400">Total Amount</div>
-                      <div className="font-semibold text-gray-900 dark:text-white">EGP {order.totalAmount}</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">EGP {formatPrice(order.totalAmount)}</div>
                     </div>
                     <ChevronRight size={20} className="text-gray-400 flex-shrink-0" />
                   </div>

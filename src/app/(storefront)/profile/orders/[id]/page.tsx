@@ -4,6 +4,7 @@ import React, { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { getOrderById, Order } from "@/services/orderService";
 import { ArrowLeft, Package, MapPin, CreditCard, Calendar } from "lucide-react";
+import { formatPrice } from "@/utils/price";
 
 export default function OrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -73,7 +74,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
           </div>
           <div>
             <div className="text-sm text-gray-500 mb-1 dark:text-gray-400">Total Amount</div>
-            <div className="text-lg font-bold text-gray-900 dark:text-white">EGP {order.totalAmount}</div>
+            <div className="text-lg font-bold text-gray-900 dark:text-white">EGP {formatPrice(order.totalAmount)}</div>
           </div>
           <div>
             <div className="text-sm text-gray-500 mb-1 dark:text-gray-400">Status</div>
@@ -139,9 +140,9 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                         {item.productName}
                       </Link>
                     </td>
-                    <td className="p-4 text-center">EGP {item.unitPrice}</td>
+                    <td className="p-4 text-center">EGP {formatPrice(item.unitPrice)}</td>
                     <td className="p-4 text-center">{item.quantity}</td>
-                    <td className="p-4 text-right font-medium">EGP {item.totalPrice}</td>
+                    <td className="p-4 text-right font-medium">EGP {formatPrice(item.totalPrice)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -151,7 +152,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                     Grand Total
                   </td>
                   <td className="p-4 text-right font-bold text-gray-900 dark:text-white">
-                    EGP {order.totalAmount}
+                    EGP {formatPrice(order.totalAmount)}
                   </td>
                 </tr>
               </tfoot>

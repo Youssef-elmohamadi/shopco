@@ -13,6 +13,7 @@ import * as categoryService from "@/services/categoryService";
 import { Category } from "@/services/categoryService";
 import { fetchBrands, Brand } from "@/services/brandService";
 import { getImageUrl } from "@/utils/apiConfig";
+import { getColorNameFromHex } from "@/utils/colorHelper";
 
 interface ProductFormProps {
   productToEdit?: Product | null;
@@ -116,7 +117,7 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
   };
 
   const handleAddVariant = () => {
-    setVariants([...variants, { size: "", colorName: "", colorHex: "#000000", price: 0, discountPrice: 0, stock: 0 }]);
+    setVariants([...variants, { size: "", colorName: "Black", colorHex: "#000000", price: 0, discountPrice: 0, stock: 0 }]);
   };
 
   const handleRemoveVariant = (index: number) => {
@@ -126,6 +127,16 @@ export default function ProductForm({ productToEdit }: ProductFormProps) {
   const handleVariantChange = (index: number, field: keyof ProductVariant, value: any) => {
     const newVariants = [...variants];
     newVariants[index] = { ...newVariants[index], [field]: value };
+    
+    // Auto-update color name if user changed colorHex and colorName was empty or default
+    if (field === "colorHex" && typeof value === "string") {
+      const currentColorName = newVariants[index].colorName;
+      const detected = getColorNameFromHex(value);
+      if (!currentColorName || currentColorName.toLowerCase() === "black" || currentColorName.toLowerCase() === "") {
+        newVariants[index].colorName = detected;
+      }
+    }
+    
     setVariants(newVariants);
   };
 

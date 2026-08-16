@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Trash2, Plus, Minus, Tag, ArrowRight, ShoppingBag } from "lucide-react";
 import { getImageUrl } from "@/utils/apiConfig";
+import { formatPrice } from "@/utils/price";
+import { resolveColorName } from "@/utils/colorHelper";
 
 export default function CartPage() {
   const {
@@ -111,23 +113,26 @@ export default function CartPage() {
                                 Size: <span className="text-gray-800 dark:text-gray-200">{item.size}</span>
                               </span>
                             )}
-                            {item.colorName && (
-                              <span className="flex items-center gap-1.5">
-                                Color:{" "}
-                                <span className="text-gray-800 dark:text-gray-200 capitalize">{item.colorName}</span>
-                                {item.colorHex && (
-                                  <span
-                                    className="w-3.5 h-3.5 rounded-full border border-gray-300 dark:border-gray-700"
-                                    style={{ backgroundColor: item.colorHex }}
-                                    title={item.colorName}
-                                  />
-                                )}
-                              </span>
-                            )}
+                            {(item.colorName || item.colorHex) && (() => {
+                              const displayColor = resolveColorName(item.colorHex, item.colorName);
+                              return (
+                                <span className="flex items-center gap-1.5">
+                                  Color:{" "}
+                                  <span className="text-gray-800 dark:text-gray-200 capitalize">{displayColor}</span>
+                                  {item.colorHex && (
+                                    <span
+                                      className="w-3.5 h-3.5 rounded-full border border-gray-300 dark:border-gray-700"
+                                      style={{ backgroundColor: item.colorHex }}
+                                      title={displayColor}
+                                    />
+                                  )}
+                                </span>
+                              );
+                            })()}
                           </div>
 
                           <div className="text-lg sm:text-xl font-bold text-black dark:text-white mt-3 sm:mt-4">
-                            {item.price} EGP
+                            {formatPrice(item.price)} EGP
                           </div>
                         </div>
 
@@ -180,14 +185,14 @@ export default function CartPage() {
                 {/* Original Subtotal */}
                 <div className="flex justify-between items-center text-gray-500 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span className="font-bold text-black dark:text-white">{originalSubtotal} EGP</span>
+                  <span className="font-bold text-black dark:text-white">{formatPrice(originalSubtotal)} EGP</span>
                 </div>
 
                 {/* Product Discount */}
                 {discountAmount > 0 && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-500 dark:text-gray-400">Product Discount</span>
-                    <span className="font-bold text-red-500">-{discountAmount} EGP</span>
+                    <span className="font-bold text-red-500">-{formatPrice(discountAmount)} EGP</span>
                   </div>
                 )}
 
@@ -197,7 +202,7 @@ export default function CartPage() {
                     <span className="text-gray-500 dark:text-gray-400 flex items-center gap-1">
                       Discount ({promoCode})
                     </span>
-                    <span className="font-bold text-red-500">-{promoDiscount} EGP</span>
+                    <span className="font-bold text-red-500">-{formatPrice(promoDiscount)} EGP</span>
                   </div>
                 )}
 
@@ -205,14 +210,14 @@ export default function CartPage() {
                 <div className="flex justify-between items-center text-gray-500 dark:text-gray-400 pb-4 border-b border-gray-100 dark:border-gray-800">
                   <span>Delivery Fee</span>
                   <span className="font-bold text-black dark:text-white">
-                    {deliveryFee > 0 ? `${deliveryFee} EGP` : "Free"}
+                    {deliveryFee > 0 ? `${formatPrice(deliveryFee)} EGP` : "Free"}
                   </span>
                 </div>
 
                 {/* Total */}
                 <div className="flex justify-between items-center text-base sm:text-lg font-bold text-black dark:text-white pt-2">
                   <span>Total</span>
-                  <span className="text-lg sm:text-xl font-extrabold">{total} EGP</span>
+                  <span className="text-lg sm:text-xl font-extrabold">{formatPrice(total)} EGP</span>
                 </div>
               </div>
 

@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, ShoppingCart, User, ChevronDown, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/utils/apiConfig";
+import { formatPrice } from "@/utils/price";
+import { resolveColorName } from "@/utils/colorHelper";
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -308,10 +310,10 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
                               <h4 className="text-xs font-bold text-black dark:text-white truncate capitalize">{item.name}</h4>
                               <p className="text-[10px] text-gray-400 dark:text-gray-500 flex gap-2 mt-0.5">
                                 {item.size && <span>Size: {item.size}</span>}
-                                {item.colorName && <span>Color: {item.colorName}</span>}
+                                {(item.colorName || item.colorHex) && <span>Color: {resolveColorName(item.colorHex, item.colorName)}</span>}
                               </p>
                               <div className="flex justify-between items-center mt-1">
-                                <span className="text-xs font-bold text-black dark:text-white">{item.price} EGP</span>
+                                <span className="text-xs font-bold text-black dark:text-white">{formatPrice(item.price)} EGP</span>
                                 <span className="text-[10px] text-gray-400 dark:text-gray-500">Qty: {item.quantity}</span>
                               </div>
                             </div>
@@ -330,7 +332,7 @@ export default function Navbar({ isLoggedIn, userName, isProfileError, topCatego
                     <div className="border-t border-gray-100 dark:border-gray-800 pt-4 mt-4">
                       <div className="flex justify-between items-baseline mb-4">
                         <span className="text-xs text-gray-500 dark:text-gray-400">Subtotal:</span>
-                        <span className="text-base font-bold text-black dark:text-white">{subtotal} EGP</span>
+                        <span className="text-base font-bold text-black dark:text-white">{formatPrice(subtotal)} EGP</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <Link

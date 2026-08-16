@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import * as promoCodeService from "@/services/promoCodeService";
+import { roundPrice } from "@/utils/price";
+import { resolveColorName } from "@/utils/colorHelper";
 
 export interface CartItem {
   id: string; // Unique ID: e.g. `${productId}-${size}-${colorHex.replace('#', '')}`
@@ -51,7 +53,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const storedCart = localStorage.getItem("shop_co_cart");
       if (storedCart) {
         try {
-          setCartItems(JSON.parse(storedCart));
+          const parsed = JSON.parse(storedCart);
+          if (Array.isArray(parsed)) {
+            setCartItems(
+              parsed.map((item) => ({
+                ...item,
+                price: roundPrice(item.price),
+                originalPrice: roundPrice(item.originalPrice ?? item.price),
+                colorName: resolveColorName(item.colorHex, item.colorName),
+              }))
+            );
+          }
         } catch (e) {
           console.error("Failed to parse stored cart items", e);
         }
@@ -60,7 +72,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const storedPromoDiscount = localStorage.getItem("shop_co_promo_discount");
       if (storedPromo && storedPromoDiscount) {
         setPromoCode(storedPromo);
-        setPromoDiscountAmount(Number(storedPromoDiscount));
+        setPromoDiscountAmount(roundPrice(Number(storedPromoDiscount)));
       }
     }
   }, []);
@@ -74,7 +86,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (newItem: Omit<CartItem, "quantity">, quantity: number) => {
     setCartItems((prevItems) => {
-      const existingItemIndex = prevItems.findIndex((item) => item.id === newItem.id);
+      const sanitizedItem = {
+        ...newItem,
+        price: roundPrice(newItem.price),
+        originalPrice: roundPrice(newItem.originalPrice ?? newItem.price),
+        colorName: resolveColorName(newItem.colorHex, newItem.colorName),
+      };
+      const existingItemIndex = prevItems.findIndex((item) => item.id === sanitizedItem.id);
 
       if (existingItemIndex > -1) {
         // Item exists, update quantity up to stock limit
@@ -83,12 +101,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const newQuantity = Math.min(existingItem.stock, existingItem.quantity + quantity);
         updatedItems[existingItemIndex] = {
           ...existingItem,
+          price: sanitizedItem.price,
+          originalPrice: sanitizedItem.originalPrice,
+          colorName: sanitizedItem.colorName,
           quantity: newQuantity,
         };
         return updatedItems;
       } else {
         // Item doesn't exist, add it
-        return [...prevItems, { ...newItem, quantity: Math.min(newItem.stock, quantity) }];
+        return [...prevItems, { ...sanitizedItem, quantity: Math.min(sanitizedItem.stock, quantity) }];
       }
     });
   };
@@ -140,7 +161,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       if (isSuccess) {
         setPromoCode(formattedCode);
-        const discountAmount = result?.data?.discountAmount ?? result?.Data?.discountAmount ?? 0;
+        const rawDiscount = result?.data?.discountAmount ?? result?.Data?.discountAmount ?? 0;
+        const discountAmount = roundPrice(rawDiscount);
         setPromoDiscountAmount(discountAmount);
         if (typeof window !== "undefined") {
           localStorage.setItem("shop_co_promo", formattedCode);
@@ -174,24 +196,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Calculations
+  // Calculations with safe float rounding
   // originalSubtotal is based on originalPrice * qty
-  const originalSubtotal = cartItems.reduce((sum, item) => sum + item.originalPrice * item.quantity, 0);
+  const originalSubtotal = roundPrice(
+    cartItems.reduce((sum, item) => sum + (Number(item.originalPrice) || 0) * item.quantity, 0)
+  );
   
   // subtotal is based on current active selling price * qty
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = roundPrice(
+    cartItems.reduce((sum, item) => sum + (Number(item.price) || 0) * item.quantity, 0)
+  );
   
   // productDiscount is the difference between originalSubtotal and selling subtotal
-  const discountAmount = originalSubtotal - subtotal;
+  const discountAmount = roundPrice(Math.max(0, originalSubtotal - subtotal));
 
   // Promo code discount is applied on top of the selling subtotal
-  const promoDiscount = promoDiscountAmount;
+  const promoDiscount = roundPrice(promoDiscountAmount);
 
   // Delivery fee is EGP 15, unless subtotal after product discount is greater than EGP 1000
   const deliveryFee = cartItems.length === 0 ? 0 : (subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE);
 
   // Total
-  const total = Math.max(0, subtotal - promoDiscount + deliveryFee);
+  const total = roundPrice(Math.max(0, subtotal - promoDiscount + deliveryFee));
 
   return (
     <CartContext.Provider

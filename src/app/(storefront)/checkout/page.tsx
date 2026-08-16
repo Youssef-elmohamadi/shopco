@@ -8,6 +8,8 @@ import { createOrder } from "@/services/orderService";
 import { getProfile } from "@/services/userService";
 import { ArrowLeft, CreditCard, Truck, ShieldCheck, ShoppingCart } from "lucide-react";
 import { getImageUrl } from "@/utils/apiConfig";
+import { formatPrice } from "@/utils/price";
+import { resolveColorName } from "@/utils/colorHelper";
 
 export default function CheckoutPage() {
   const { cartItems, total, subtotal, originalSubtotal, discountAmount, promoDiscount, deliveryFee, promoCode, clearCart } = useCart();
@@ -317,7 +319,7 @@ export default function CheckoutPage() {
               disabled={loading}
               className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-full font-bold hover:opacity-90 transition shadow-md disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
-              {loading ? "Processing Order..." : `Place Order (Total: ${total} EGP)`}
+              {loading ? "Processing Order..." : `Place Order (Total: ${formatPrice(total)} EGP)`}
             </button>
           </form>
 
@@ -339,9 +341,9 @@ export default function CheckoutPage() {
                     <div className="flex-grow min-w-0">
                       <h4 className="text-sm font-bold truncate capitalize">{item.name}</h4>
                       <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                        Qty: {item.quantity} {item.size && `• Size: ${item.size}`} {item.colorName && `• Color: ${item.colorName}`}
+                        Qty: {item.quantity} {item.size && `• Size: ${item.size}`} {(item.colorName || item.colorHex) && `• Color: ${resolveColorName(item.colorHex, item.colorName)}`}
                       </p>
-                      <div className="font-bold text-sm text-black dark:text-white mt-1">{item.price} EGP</div>
+                      <div className="font-bold text-sm text-black dark:text-white mt-1">{formatPrice(item.price)} EGP</div>
                     </div>
                   </div>
                 );
@@ -352,31 +354,31 @@ export default function CheckoutPage() {
             <div className="border-t border-gray-100 dark:border-gray-800 pt-4 space-y-3 text-sm">
               <div className="flex justify-between text-gray-500 dark:text-gray-400">
                 <span>Subtotal</span>
-                <span>{originalSubtotal} EGP</span>
+                <span>{formatPrice(originalSubtotal)} EGP</span>
               </div>
               
               {discountAmount > 0 && (
                 <div className="flex justify-between text-red-500">
                   <span>Product Discount</span>
-                  <span>-{discountAmount} EGP</span>
+                  <span>-{formatPrice(discountAmount)} EGP</span>
                 </div>
               )}
 
               {promoDiscount > 0 && (
                 <div className="flex justify-between text-red-500">
                   <span>Discount ({promoCode})</span>
-                  <span>-{promoDiscount} EGP</span>
+                  <span>-{formatPrice(promoDiscount)} EGP</span>
                 </div>
               )}
 
               <div className="flex justify-between text-gray-500 dark:text-gray-400 pb-3 border-b border-gray-100 dark:border-gray-800">
                 <span>Delivery Fee</span>
-                <span>{deliveryFee > 0 ? `${deliveryFee} EGP` : "Free"}</span>
+                <span>{deliveryFee > 0 ? `${formatPrice(deliveryFee)} EGP` : "Free"}</span>
               </div>
 
               <div className="flex justify-between text-base font-extrabold text-black dark:text-white pt-1">
                 <span>Total Amount</span>
-                <span>{total} EGP</span>
+                <span>{formatPrice(total)} EGP</span>
               </div>
             </div>
 
